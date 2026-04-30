@@ -1,0 +1,112 @@
+﻿@model List<hrbs_project.Models.Room>
+
+
+<div class="container-fluid mt-4">
+    <div class="d-flex justify-content-between mb-3">
+        <h3>Rooms</h3>
+        <button type="button" class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#addRoomModal">
+            <i class="bi bi-plus-square"></i> + Add
+        </button>
+    </div>
+
+    <table class="table table-hover border">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Name</th>
+                <th>Area</th>
+                <th>Guests</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.Id</td>
+                    <td>@item.Name</td>
+                    <td>@(item.Area) sq. ft.</td>
+                    <td>Adult: @item.Adult <br> Child: @item.Children</td>
+                    <td>₹@item.Price</td>
+                    <td>@item.Quantity</td>
+                    <td><span class="badge bg-dark">active</span></td>
+                    <td>
+                        <button class="btn btn-primary btn-sm"><i class="bi bi-pencil-square"></i></button>
+                        <button class="btn btn-info btn-sm text-white"><i class="bi bi-images"></i></button>
+                        <button class="btn btn-danger btn-sm"><i class="bi bi-trash"></i></button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="addRoomModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <form asp-action="AddRoom" method="post">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Add Room</h5>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Name</label>
+                            <input type="text" name="Name" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Area</label>
+                            <input type="text" name="Area" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Price</label>
+                            <input type="number" name="Price" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Quantity</label>
+                            <input type="number" name="Quantity" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Adult (Max.)</label>
+                            <input type="number" name="Adult" class="form-control" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label fw-bold">Children (Max.)</label>
+                            <input type="number" name="Children" class="form-control" required>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label fw-bold">Features</label>
+                            <div class="row">
+                                <div class="col-md-3"><input type="checkbox" name="SelectedFeatures" value="Kitchen"> Kitchen</div>
+                                <div class="col-md-3"><input type="checkbox" name="SelectedFeatures" value="Balcony"> Balcony</div>
+                                <div class="col-md-3"><input type="checkbox" name="SelectedFeatures" value="Bedroom"> Bedroom</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label fw-bold">Facilities</label>
+                            <div class="row">
+                                <div class="col-md-3"><input type="checkbox" name="SelectedFacilities" value="Wifi"> Wifi</div>
+                                <div class="col-md-3"><input type="checkbox" name="SelectedFacilities" value="AC"> Air Conditioner</div>
+                                <div class="col-md-3"><input type="checkbox" name="SelectedFacilities" value="TV"> Television</div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 mb-3">
+                            <label class="form-label fw-bold">Description</label>
+                            <textarea name="Description" rows="4" class="form-control"></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="reset" class="btn text-secondary shadow-none" data-bs-dismiss="modal">CANCEL</button>
+                    <button type="submit" class="btn btn-success text-white shadow-none">SUBMIT</button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

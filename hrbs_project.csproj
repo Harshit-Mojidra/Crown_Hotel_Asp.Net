@@ -1,0 +1,87 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="Content\" />
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="wwwroot\images\about\about.jpg" />
+    <None Include="wwwroot\images\about\customers.svg" />
+    <None Include="wwwroot\images\about\hacker.jpg" />
+    <None Include="wwwroot\images\about\hotel.svg" />
+    <None Include="wwwroot\images\about\IMG_16569.jpeg" />
+    <None Include="wwwroot\images\about\ING_22216.jpg" />
+    <None Include="wwwroot\images\about\ING_24429.jpg" />
+    <None Include="wwwroot\images\about\ING_36028.jpg" />
+    <None Include="wwwroot\images\about\ING_40983.jpg" />
+    <None Include="wwwroot\images\about\ING_41979.jpg" />
+    <None Include="wwwroot\images\about\ING_81505.jpg" />
+    <None Include="wwwroot\images\about\ING_91818.jpg" />
+    <None Include="wwwroot\images\about\rating.svg" />
+    <None Include="wwwroot\images\about\staff.svg" />
+    <None Include="wwwroot\images\carousel\ING_12377.png" />
+    <None Include="wwwroot\images\carousel\ING_23784.png" />
+    <None Include="wwwroot\images\carousel\ING_27693.png" />
+    <None Include="wwwroot\images\carousel\ING_42527.png" />
+    <None Include="wwwroot\images\carousel\ING_47528.png" />
+    <None Include="wwwroot\images\carousel\ING_78893.png" />
+    <None Include="wwwroot\images\carousel\ING_79964.png" />
+    <None Include="wwwroot\images\facilities\ING_21533.svg" />
+    <None Include="wwwroot\images\facilities\ING_24656.svg" />
+    <None Include="wwwroot\images\facilities\ING_29694.svg" />
+    <None Include="wwwroot\images\facilities\ING_37867.svg" />
+    <None Include="wwwroot\images\facilities\ING_51499.svg" />
+    <None Include="wwwroot\images\facilities\ING_51860.svg" />
+    <None Include="wwwroot\images\facilities\ING_58040.svg" />
+    <None Include="wwwroot\images\facilities\ING_59592.svg" />
+    <None Include="wwwroot\images\facilities\ING_60632.svg" />
+    <None Include="wwwroot\images\facilities\ING_73173.svg" />
+    <None Include="wwwroot\images\facilities\ING_73456.svg" />
+    <None Include="wwwroot\images\facilities\ING_85043.svg" />
+    <None Include="wwwroot\images\facilities\ING_90797.svg" />
+    <None Include="wwwroot\images\facilities\ING_92426.svg" />
+    <None Include="wwwroot\images\features\air conditioner.svg" />
+    <None Include="wwwroot\images\features\geyser.svg" />
+    <None Include="wwwroot\images\features\room heater.svg" />
+    <None Include="wwwroot\images\features\spa.svg" />
+    <None Include="wwwroot\images\features\star-fill.svg" />
+    <None Include="wwwroot\images\features\television.svg" />
+    <None Include="wwwroot\images\features\wifi.svg" />
+    <None Include="wwwroot\images\rooms\ING_16481.png" />
+    <None Include="wwwroot\images\rooms\ING_26679.png" />
+    <None Include="wwwroot\images\rooms\ING_30829.png" />
+    <None Include="wwwroot\images\rooms\ING_41371.png" />
+    <None Include="wwwroot\images\rooms\ING_56712.png" />
+    <None Include="wwwroot\images\rooms\ING_57910.png" />
+    <None Include="wwwroot\images\rooms\ING_67249.png" />
+    <None Include="wwwroot\images\rooms\ING_67939.jpg" />
+    <None Include="wwwroot\images\rooms\ING_70700.png" />
+    <None Include="wwwroot\images\rooms\ING_74263.png" />
+    <None Include="wwwroot\images\rooms\thumbnail.jpg" />
+    <None Include="wwwroot\images\users\ING_45728.jpeg" />
+    <None Include="wwwroot\images\users\ING_67076.jpeg" />
+    <None Include="wwwroot\images\users\ING_82241.jpeg" />
+    <None Include="wwwroot\images\users\ING_89237.jpeg" />
+    <None Include="wwwroot\images\users\ING_91052.jpeg" />
+    <None Include="wwwroot\images\users\ING_91947.jpeg" />
+    <None Include="wwwroot\images\users\ING_95897.jpeg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="6.1.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Razorpay" Version="3.3.2" />
+  </ItemGroup>
+
+</Project>

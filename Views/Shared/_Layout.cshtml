@@ -1,0 +1,206 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title - Crown Hotel</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <style>
+        .navbar-brand {
+            font-size: 28px;
+            font-weight: bold;
+            font-family: 'Georgia', serif;
+        }
+
+        .nav-link {
+            font-size: 16px;
+            margin-right: 15px;
+        }
+
+        /* HERO IMAGE */
+        .hero-section {
+            position: relative;
+        }
+
+            .hero-section img {
+                width: 100%;
+                height: 420px;
+                object-fit: cover;
+            }
+
+        /* BOOKING BOX */
+        .booking-box {
+            position: absolute;
+            bottom: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 85%;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            z-index: 10;
+        }
+
+        .after-hero {
+            margin-top: 100px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-expand-lg bg-light shadow-sm">
+        <div class="container">
+
+            <a class="navbar-brand" asp-controller="Home" asp-action="Index">
+                Crown Hotel
+            </a>
+
+            <button class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+
+                <!-- MENU -->
+                <ul class="navbar-nav mx-auto">
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Index">Home</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Rooms">Rooms</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Facilities">Facilities</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a></li>
+                    <li class="nav-item"><a class="nav-link" asp-controller="Home" asp-action="About">About</a></li>
+                </ul>
+
+                <!-- RIGHT SIDE -->
+                <div class="d-flex align-items-center">
+
+                    @if (Context.Session.GetString("User") == null)
+                    {
+                        <button class="btn btn-outline-dark me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            Login
+                        </button>
+
+                        <button class="btn btn-outline-dark me-3" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            Register
+                        </button>
+                    }
+                    else
+                    {
+                        <span class="me-3">
+                             @Context.Session.GetString("User")
+                        </span>
+
+                        <a href="/Account/Logout" class="btn btn-danger me-3">
+                            Logout
+                        </a>
+                    }
+
+                    <!-- ADMIN -->
+                    @if (Context.Session.GetString("Admin") == null)
+                    {
+                        <a href="/Admin/Login" class="btn btn-dark">
+                            Admin
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="/Admin/Dashboard" class="btn btn-success me-2">
+                            Dashboard
+                        </a>
+
+                        <a href="/Admin/Logout" class="btn btn-danger">
+                            Logout
+                        </a>
+                    }
+
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ALERT -->
+    @if (TempData["Error"] != null)
+    {
+        <script>alert("@TempData["Error"]");</script>
+    }
+
+    @if (TempData["Success"] != null)
+    {
+        <script>alert("@TempData["Success"]");</script>
+    }
+
+    <!-- BODY -->
+    @RenderBody()
+
+    <!-- LOGIN MODAL -->
+    <div class="modal fade" id="loginModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content p-3">
+
+                <h5>User Login</h5>
+
+                <form method="post" action="/Account/Login">
+                    <input name="email" class="form-control mb-2" placeholder="Email" required />
+                    <input name="password" type="password" class="form-control mb-2" placeholder="Password" required />
+                    <button class="btn btn-dark w-100">Login</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- REGISTER MODAL -->
+    <div class="modal fade" id="registerModal">
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+            <div class="modal-content p-4">
+
+                <h4>Register</h4>
+
+                <form method="post" action="/Account/Register" enctype="multipart/form-data">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <input name="Name" class="form-control" placeholder="Name" required />
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <input name="Email" class="form-control" placeholder="Email" required />
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <input name="Phone" class="form-control" placeholder="Phone" />
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <input type="file" name="ImageFile" class="form-control" />
+                        </div>
+
+                        <div class="col-12 mb-2">
+                            <textarea name="Address" class="form-control" placeholder="Address"></textarea>
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <input name="Password" type="password" class="form-control" placeholder="Password" required />
+                        </div>
+
+                        <div class="col-md-6 mb-2">
+                            <input name="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" required />
+                        </div>
+                    </div>
+
+                    <button class="btn btn-dark w-100 mt-2">Register</button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

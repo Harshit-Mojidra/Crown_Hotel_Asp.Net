@@ -1,0 +1,67 @@
+﻿@model List<hrbs_project.Models.Booking>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2 class="mb-4">Booking Records</h2>
+
+<div class="card p-3">
+    <table class="table table-bordered table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Order ID</th>
+                <th>User Name</th>
+                <th>Phone</th>
+                <th>Room</th>
+                <th>Price</th>
+                <th>Check-In</th>
+                <th>Check-Out</th>
+                <th>Paid</th>
+                <th>Booking Date</th>
+                <th>Status</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@item.order_id</td>
+                    <td>@item.user_name</td>
+                    <td>@item.phone</td>
+                    <td>@item.room_name</td>
+                    <td>₹ @item.price</td>
+                    <td>@item.check_in.ToShortDateString()</td>
+                    <td>@item.check_out.ToShortDateString()</td>
+                    <td>₹ @item.paid_amount</td>
+                    <td>@item.booking_date.ToShortDateString()</td>
+
+                    <td>
+                        @if (item.status == "Pending")
+                        {
+                            <span class="badge bg-warning text-dark">Pending</span>
+                        }
+                        else if (item.status == "Confirmed")
+                        {
+                            <span class="badge bg-success">Confirmed</span>
+                        }
+                        else
+                        {
+                            <span class="badge bg-danger">Cancelled</span>
+                        }
+                    </td>
+
+                    <td>
+                        @* <a href="/Admin/ConfirmBooking/@item.Id" class="btn btn-success btn-sm">Confirm</a>
+                        <a href="/Admin/CancelBooking/@item.Id" class="btn btn-danger btn-sm">Cancel</a> *@
+                        <a asp-action="Approve" asp-route-id="@item.Id"
+                           class="btn btn-success btn-sm">
+                            Confirm
+                        </a>
+                        <a href="/Admin/CancelBooking/@item.Id" class="btn btn-danger btn-sm">Cancel</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

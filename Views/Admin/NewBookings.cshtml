@@ -1,0 +1,77 @@
+﻿@model List<hrbs_project.Models.Booking>
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+<h2 class="mb-4">NEW BOOKINGS</h2>
+
+<div class="card p-3">
+
+    <div class="d-flex justify-content-end mb-3">
+        <input type="text" class="form-control w-25" placeholder="Type to search..." />
+    </div>
+
+    <table class="table table-bordered">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>User Details</th>
+                <th>Room Details</th>
+                <th>Bookings Details</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            @if (Model == null || Model.Count == 0)
+            {
+                <tr>
+                    <td colspan="5" class="text-center">No Data Found</td>
+                </tr>
+            }
+            else
+            {
+                var i = 1;
+
+                foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@i</td>
+
+                        <td>
+                            <span class="badge bg-primary">
+                                Order ID: @item.order_id
+                            </span><br />
+
+                            <b>Name:</b> @item.user_name <br />
+                            <b>Phone No:</b> @item.phone
+                        </td>
+
+                        <td>
+                            <b>Room:</b> @item.room_name <br />
+                            <b>Price:</b> ₹@item.price
+                        </td>
+
+                        <td>
+                            <b>Check-in:</b> @item.check_in.ToString("dd-MM-yyyy") <br />
+                            <b>Check-out:</b> @item.check_out.ToString("dd-MM-yyyy") <br />
+                            <b>Paid:</b> ₹@item.paid_amount <br />
+                            <b>Date:</b> @item.booking_date.ToString("dd-MM-yyyy")
+                        </td>
+
+                        <td>
+                            <button class="btn btn-success btn-sm mb-2">
+                                Assign Room
+                            </button>
+
+                            <button class="btn btn-danger btn-sm">
+                                Cancel Booking
+                            </button>
+                        </td>
+                    </tr>
+
+                    i++;
+                }
+            }
+        </tbody>
+    </table>
+</div>

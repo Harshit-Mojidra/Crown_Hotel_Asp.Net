@@ -1,0 +1,204 @@
+﻿@{
+    ViewBag.Title = "Home";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+@model List<Room>
+<!-- HERO SECTION -->
+<div class="hero-section">
+
+    <!-- ✅ ONLY ONE IMAGE -->
+    <img src="~/images/carousel/ING_79964.png" />
+
+    <!-- ✅ BOOKING BOX (OVER IMAGE) -->
+    <div class="booking-box">
+        <h5 class="mb-3">Check Booking Availability</h5>
+
+        <form method="get" action="/Home/Rooms">
+            <div class="row align-items-end">
+
+                <div class="col-md-3">
+                    <label>Check-in</label>
+                    <input type="date" name="checkin" class="form-control" required />
+                </div>
+
+                <div class="col-md-3">
+                    <label>Check-out</label>
+                    <input type="date" name="checkout" class="form-control" required />
+                </div>
+
+                <div class="col-md-2">
+                    <label>Adult</label>
+                    <select name="adults" class="form-control">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <label>Children</label>
+                    <select name="children" class="form-control">
+                        <option>0</option>
+                        <option>1</option>
+                        <option>2</option>
+                    </select>
+                </div>
+
+                <div class="col-md-2">
+                    <button class="btn btn-success w-100">Submit</button>
+                </div>
+
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<!-- SPACE FIX -->
+<div class="after-hero"></div>
+
+<!-- ROOMS SECTION -->
+<div class="container mt-5">
+    <h3 class="text-center">OUR ROOMS</h3>
+    <div class="row mt-4">
+
+        <!-- Room 1 -->
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <img src="~/images/rooms/ING_74263.png" class="card-img-top" />
+                <div class="card-body">
+                    <h5>Imperial Luxury Suite</h5>
+                    <p>₹12000 per night</p>
+                    <p><strong>Features:</strong> Kitchen, Balcony</p>
+                    <p><strong>Facilities:</strong> WiFi, AC, TV</p>
+                    <p><strong>Guests:</strong> 6 Adults, 4 Children</p>
+                    <p><strong>Rating:</strong> ⭐⭐⭐⭐</p>
+                    <a asp-controller="Home" asp-action="Rooms" class="btn btn-success">Book Now</a>
+                    <button class="btn btn-outline-secondary">More details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room 2 -->
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <img src="~/images/rooms/ING_41371.png" class="card-img-top" />
+                <div class="card-body">
+                    <h5>Elite Premium Room</h5>
+                    <p>₹6200 per night</p>
+                    <p><strong>Features:</strong> Kitchen, Balcony, Bedroom</p>
+                    <p><strong>Facilities:</strong> Wifi, AC, TV, Geyser</p>
+                    <p><strong>Guests:</strong> 5 Adults, 3 Children</p>
+                    <p><strong>Rating:</strong> ⭐⭐⭐⭐⭐</p>
+                    <a asp-controller="Home" asp-action="Rooms" class="btn btn-success">Book Now</a>
+                    <button class="btn btn-outline-secondary">More details</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Room 3 -->
+        <div class="col-md-4">
+            <div class="card shadow h-100">
+                <img src="~/images/rooms/ING_56712.png" class="card-img-top" />
+                <div class="card-body">
+                    <h5>Family Deluxe Room</h5>
+                    <p>₹3200 per night</p>
+                    <p><strong>Features:</strong> Kitchen, Balcony, Bedroom</p>
+                    <p><strong>Facilities:</strong> Wifi, AC, TV, Geyser</p>
+                    <p><strong>Guests:</strong> 4 Adults, 3 Children</p>
+                    <p><strong>Rating:</strong> ⭐⭐⭐⭐</p>
+                    <a asp-controller="Home" asp-action="Rooms" class="btn btn-success">Book Now</a>
+                    <button class="btn btn-outline-secondary">More details</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- FACILITIES -->
+<div class="container mt-5 text-center">
+    <h3>OUR FACILITIES</h3>
+    <div class="row mt-4">
+        <!-- WIFI -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 shadow-sm h-100 text-center">
+                <i class="bi bi-wifi fs-1 mb-3"></i>
+                <h5>Wifi</h5>
+                <p>Reliable high-speed wireless internet available throughout the room.</p>
+            </div>
+        </div>
+
+        <!-- AC -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 shadow-sm h-100 text-center">
+                <i class="bi bi-snow fs-1 mb-3"></i>
+                <h5>Air Conditioner</h5>
+                <p>Advanced cooling system providing comfortable temperature.</p>
+            </div>
+        </div>
+
+        <!-- TV -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 shadow-sm h-100 text-center">
+                <i class="bi bi-tv fs-1 mb-3"></i>
+                <h5>Television</h5>
+                <p>Modern LED TV with entertainment options for relaxation.</p>
+            </div>
+        </div>
+
+        <!-- GEYSER -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 shadow-sm h-100 text-center">
+                <i class="bi bi-droplet fs-1 mb-3"></i>
+                <h5>Geyser</h5>
+                <p>Instant hot water supply ensuring comfortable showers.</p>
+            </div>
+        </div>
+
+        <!-- SPA -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 shadow-sm h-100 text-center">
+                <i class="bi bi-flower1 fs-1 mb-3"></i>
+                <h5>Spa</h5>
+                <p>Relaxing in-room spa service offering rejuvenation.</p>
+            </div>
+        </div>
+
+        <!-- HEATER -->
+        <div class="col-md-4 mb-4">
+            <div class="card p-4 shadow-sm h-100 text-center">
+                <i class="bi bi-thermometer-half fs-1 mb-3"></i>
+                <h5>Room Heater</h5>
+                <p>Efficient heating system to keep the room warm.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- TESTIMONIALS -->
+<div class="container mt-5">
+    <h3 class="text-center">TESTIMONIALS</h3>
+    <div class="row mt-4">
+        <div class="col-md-4"><div class="card p-3 shadow">Not satisfied ⭐⭐</div></div>
+        <div class="col-md-4"><div class="card p-3 shadow">Excellent ⭐⭐⭐⭐⭐</div></div>
+        <div class="col-md-4"><div class="card p-3 shadow">Very nice ⭐⭐⭐⭐</div></div>
+    </div>
+</div>
+
+<!-- CONTACT -->
+<div class="container mt-5">
+    <h3 class="text-center">REACH US</h3>
+    <div class="row mt-4">
+        <div class="col-md-8">
+            <iframe src="https://maps.google.com/maps?q=rajkot&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                    style="width:100%; height:300px;"></iframe>
+        </div>
+        <div class="col-md-4">
+            <h5>Call us</h5>
+            <p>+91 9999999999</p>
+            <h5>Follow us</h5>
+            <p>Facebook | Instagram</p>
+        </div>
+    </div>
+</div>

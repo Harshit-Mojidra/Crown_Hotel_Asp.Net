@@ -1,0 +1,74 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build Folders
+bin/
+obj/
+
+# Rider
+.idea/
+*.sln.iml
+
+# ASP.NET
+appsettings.Development.json
+
+# Packages
+*.nupkg
+*.snupkg
+
+# Others
+*.log
+*.tlog
+*.vsix
+*.cache
+*.pdb
+*.mdb
+*.opendb
+*.dbmdl
+
+# Node/npm
+node_modules/
+
+# Temporary files
+*.tmp
+*.temp
+*~
+
+# JetBrains
+*.dotCover
+*.ReSharper*
+
+# Windows image file caches
+Thumbs.db
+Desktop.ini
+
+# Visual Studio Code
+.vscode/
+
+# SQL Server
+*.mdf
+*.ldf
+
+# dotCover
+*.dotCover
+
+# Entity Framework
+$RECYCLE.BIN/
+
+# IIS Express
+IISExpress/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# Published output
+publish/
+
+# API keys and secrets
+secrets.json

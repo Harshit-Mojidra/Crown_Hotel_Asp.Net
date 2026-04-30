@@ -1,0 +1,92 @@
+﻿@model Settings
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid mt-4">
+
+    <h3 class="mb-4">SETTINGS</h3>
+
+    <!-- GENERAL SETTINGS -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <div class="d-flex justify-content-between">
+            <h5>General Settings</h5>
+            <button class="btn btn-dark btn-sm">Edit</button>
+        </div>
+
+        <p><strong>Site Title:</strong> @Model.SiteTitle</p>
+        <p><strong>About us:</strong> @Model.About</p>
+    </div>
+
+    <!-- SHUTDOWN -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <div class="d-flex justify-content-between">
+            <h5>Shutdown Website</h5>
+
+            <div class="form-check form-switch">
+                <input class="form-check-input" type="checkbox"
+                       @(Model.IsShutdown ? "checked" : "") />
+            </div>
+        </div>
+
+        <p>No customers will be allowed to book hotel room, when shutdown mode is turned on.</p>
+    </div>
+
+    <!-- CONTACT SETTINGS -->
+    <div class="card p-3 mb-4 shadow-sm">
+        <div class="d-flex justify-content-between">
+            <h5>Contacts Settings</h5>
+            <button class="btn btn-dark btn-sm">Edit</button>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6">
+                <p><strong>Address:RAJKOT </strong> @Model.Address</p>
+                @* <p><strong>Google Map:</strong> @Model.GoogleMap</p> *@
+                <p><strong>Phone:9999999999</strong> @Model.Phone1</p>
+                <p><strong>Email:crownhotel@gmail.com</strong> @Model.Email</p>
+            </div>
+
+            <div class="col-md-6">
+                <p><strong>Social Links</strong></p>
+                <p>Facebook: @Model.Facebook</p>
+
+                <p class="mt-3"><strong>Google Map</strong></p>
+
+                <!-- ✅ FIXED IFRAME -->
+                <iframe src="https://maps.google.com/maps?q=rajkot&t=&z=13&ie=UTF8&iwloc=&output=embed"
+                        style="width:100%; height:200px; border:0;"
+                        loading="lazy"
+                        allowfullscreen>
+                </iframe>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- TEAM SECTION -->
+    <div class="card p-3 shadow-sm">
+        <div class="d-flex justify-content-between mb-3">
+            <h5>Management Team</h5>
+            <button class="btn btn-dark btn-sm">Add</button>
+        </div>
+
+        <div class="row">
+            @for (int i = 1; i <= 3; i++)
+            {
+                <div class="col-md-2 text-center">
+                    <div class="card">
+                        <img src="/images/about/ING_22216.jpg" class="card-img-top img-fluid" />
+
+                        <div class="card-body p-2">
+                            <button class="btn btn-danger btn-sm mb-2">Delete</button>
+                            <p>Team Member @i</p>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+
+</div>

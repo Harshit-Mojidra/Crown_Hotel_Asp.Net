@@ -1,0 +1,92 @@
+﻿@model List<hrbs_project.Models.User>
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<div class="container-fluid mt-4">
+    <h3 class="mb-4">USERS</h3>
+
+    <div class="card p-3 shadow-sm">
+
+        <!-- SEARCH -->
+        <div class="d-flex justify-content-end mb-3">
+            <input type="text" id="searchBox" class="form-control w-25" placeholder="Search user..." />
+        </div>
+
+        <table class="table table-bordered text-center" id="userTable">
+            <thead class="table-dark">
+                <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Phone</th>
+                    <th>Location</th>
+                    <th>DOB</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                @for (int i = 0; i < Model.Count; i++)
+                {
+                    <tr>
+                        <td>@(i + 1)</td>
+
+                        <td>
+                            <img src="~/uploads/@Model[i].ImagePath"
+                                 width="40" height="40"
+                                 style="border-radius:50%;object-fit:cover;" />
+                            <br />
+                            @Model[i].Name
+                        </td>
+
+                        <td>@Model[i].Email</td>
+                        <td>@Model[i].Phone</td>
+
+                        <td>@Model[i].Address | @Model[i].Pincode</td>
+
+                        <td>@Model[i].DOB.ToString("yyyy-MM-dd")</td>
+
+                        <td>
+                            <span class="badge bg-@(Model[i].Status == "active" ? "success" : "secondary")">
+                                @Model[i].Status
+                            </span>
+                        </td>
+
+                        <td>
+                            <button class="btn btn-sm btn-warning toggleBtn"
+                                    data-id="@Model[i].Id">
+                                Toggle
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    $("#searchBox").on("keyup", function () {
+        var value = $(this).val().toLowerCase();
+
+        $("#userTable tbody tr").filter(function () {
+            $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+        });
+    });
+
+    $(".toggleBtn").click(function () {
+        var id = $(this).data("id");
+
+        $.post('/Admin/ToggleUserStatus', { id: id }, function (res) {
+            if (res.success) {
+                location.reload(); // or update UI manually
+            }
+        });
+    });
+</script>

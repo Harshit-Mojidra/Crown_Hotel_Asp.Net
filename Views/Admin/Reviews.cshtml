@@ -1,0 +1,132 @@
+﻿@model hrbs_project.Models.RatingsReviewsViewModel
+
+@{
+    Layout = "~/Views/Shared/_AdminLayout.cshtml";
+}
+
+<form id="antiForgeryForm">
+    @Html.AntiForgeryToken()
+</form>
+
+<div class="container-fluid mt-4">
+
+    <h3 class="mb-4 fw-bold">RATINGS & REVIEWS</h3>
+
+    <div class="d-flex justify-content-end mb-3">
+        <button class="btn btn-dark me-2" onclick="markAllAsRead()">✔ Mark all as read</button>
+        <button class="btn btn-danger" onclick="deleteAll()">🗑 Delete all</button>
+    </div>
+
+    <div class="card shadow-sm">
+        <div class="table-responsive">
+
+            <table class="table table-bordered align-middle">
+                <thead class="table-dark text-center">
+                    <tr>
+                        <th>#</th>
+                        <th>Room Name</th>
+                        <th>User Name</th>
+                        <th>Rating</th>
+                        <th>Review</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @{
+                        int count = 1;
+                    }
+
+                    @foreach (var item in Model.RatingsReviews)
+                    {
+                        <tr class="@(item.is_read ? "" : "table-warning")">
+
+                            <td>@count</td>
+                            <td>@item.RoomName</td>
+                            <td>@item.UserName</td>
+                            <td class="text-center">@item.rating</td>
+                            <td>@item.review</td>
+                            <td>@item.review_date?.ToString("dd-MM-yyyy")</td>
+
+                            <td class="text-center">
+
+                                @if (!item.is_read)
+                                {
+                                    <button type="button" class="btn btn-primary btn-sm mb-1"
+                                            onclick="markAsRead(@item.id)">
+                                        Mark as read
+                                    </button>
+                                }
+
+                                <br />
+
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        onclick="deleteReview(@item.id)">
+                                    Delete
+                                </button>
+
+                            </td>
+
+                        </tr>
+
+                        count++;
+                    }
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+    function getToken() {
+        return $('input[name="__RequestVerificationToken"]').val();
+    }
+
+    function markAsRead(id) {
+        $.post('/RatingReview/MarkAsRead',
+            { id: id, __RequestVerificationToken: getToken() },
+            function () { location.reload(); });
+    }
+
+    function deleteReview(id) {
+        if (confirm("Delete this review?")) {
+            $.post('/RatingReview/Delete',
+                { id: id, __RequestVerificationToken: getToken() },
+                function () { location.reload(); });
+        }
+    }
+
+    function markAllAsRead() {
+        $.post('/RatingReview/MarkAllAsRead',
+            { __RequestVerificationToken: getToken() },
+            function () { location.reload(); });
+    }
+
+    function deleteAll() {
+        if (confirm("Delete ALL reviews?")) {
+
+            let ids = [];
+
+            @foreach (var item in Model.RatingsReviews)
+            {
+                    <text>ids.push(@item.id);</text>
+            }
+
+            $.ajax({
+                url: '/RatingReview/DeleteSelected',
+                type: 'POST',
+                contentType: 'application/json',
+                headers: { "RequestVerificationToken": getToken() },
+                data: JSON.stringify(ids),
+                success: function () {
+                    location.reload();
+                }
+            });
+        }
+    }
+</script>
