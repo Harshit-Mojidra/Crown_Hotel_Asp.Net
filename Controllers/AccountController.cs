@@ -188,8 +188,8 @@ namespace hrbs_project.Controllers
 
         private void SendEmail(string toEmail, string link)
         {
-            var fromEmail = "yourgmail@gmail.com";
-            var password = "your_app_password";
+            var fromEmail = "mihirharsoda1@gmail.com";
+            var password = "qqxsugmcadxcnpzz";
 
             var message = new MailMessage();
             message.To.Add(toEmail);

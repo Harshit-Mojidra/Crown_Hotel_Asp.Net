@@ -21,7 +21,7 @@ namespace hrbs_project.Controllers
         {
             _context = context;
         }
-
+        
         // ================= SESSION =================
 
         private bool IsUserLoggedIn()
@@ -61,7 +61,7 @@ namespace hrbs_project.Controllers
                 RazorpayClient client = new RazorpayClient(razorpayKey, razorpaySecret);
 
                 Dictionary<string, object> options = new Dictionary<string, object>();
-                options.Add("amount", totalAmount * 100); // Amount in paise
+                options.Add("amount",(int) (totalAmount * 100)); // Amount in paise
                 options.Add("currency", "INR");
                 options.Add("payment_capture", 1);
 
@@ -151,7 +151,13 @@ namespace hrbs_project.Controllers
 
             if (room == null)
                 return NotFound();
+            // Get booked dates for this room
+            var existingBookings = _context.BookingOrder
+                .Where(b => b.room_id == id && b.status == "Paid")
+                .Select(b => new { b.check_in, b.check_out })
+                .ToList();
 
+            ViewBag.BookedDates = existingBookings;
             return View(room);
         }
 
@@ -205,61 +211,77 @@ namespace hrbs_project.Controllers
         // ================= PAYMENT SUCCESS =================
 
         public async Task<IActionResult> PaymentSuccess(
-            string paymentId,
-            string orderId,
-            int roomId,
-            string name,
-            string phone,
-            string checkin,
-            string checkout,
-            string amount)
+        string razorpay_payment_id,
+        string razorpay_order_id,
+        string razorpay_signature,
+        int roomId,
+        string name,
+        string phone,
+        string checkin,
+        string checkout)
         {
             try
             {
-                // Validate input
-                if (string.IsNullOrEmpty(paymentId) || string.IsNullOrEmpty(orderId))
+                // ✅ Step 1: Validate Razorpay response
+                if (string.IsNullOrEmpty(razorpay_payment_id) ||
+                    string.IsNullOrEmpty(razorpay_order_id) ||
+                    string.IsNullOrEmpty(razorpay_signature))
                 {
                     return Content("Invalid payment information.");
                 }
 
-                // Parse dates
-                if (!DateTime.TryParseExact(checkin, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime checkInDate) ||
-                    !DateTime.TryParseExact(checkout, "yyyy-MM-dd", null, System.Globalization.DateTimeStyles.None, out DateTime checkOutDate))
+                // ✅ Step 2: Verify signature
+                string generated_signature;
+
+                using (var hmac = new System.Security.Cryptography.HMACSHA256(
+                    System.Text.Encoding.UTF8.GetBytes(razorpaySecret)))
+                {
+                    string data = razorpay_order_id + "|" + razorpay_payment_id;
+                    var hash = hmac.ComputeHash(System.Text.Encoding.UTF8.GetBytes(data));
+                    generated_signature = BitConverter.ToString(hash).Replace("-", "").ToLower();
+                }
+
+                if (generated_signature != razorpay_signature)
+                {
+                    return Content("Payment verification failed.");
+                }
+
+                // ✅ Step 3: Parse dates
+                if (!DateTime.TryParseExact(checkin, "yyyy-MM-dd", null,
+                    System.Globalization.DateTimeStyles.None, out DateTime checkInDate) ||
+                    !DateTime.TryParseExact(checkout, "yyyy-MM-dd", null,
+                    System.Globalization.DateTimeStyles.None, out DateTime checkOutDate))
                 {
                     return Content("Invalid date format.");
                 }
 
-                // Get room
+                // ✅ Step 4: Get room
                 var room = await _context.Rooms.FirstOrDefaultAsync(r => r.Id == roomId);
                 if (room == null)
                     return Content("Room not found.");
 
-                // Check login
                 int? currentUserId = HttpContext.Session.GetInt32("UserId");
                 if (currentUserId == null)
                     return RedirectToAction("Login", "Account");
 
-                // Calculate total - handle nullable Price
                 int days = (checkOutDate - checkInDate).Days;
                 if (days <= 0) days = 1;
+
                 decimal totalAmount = (room.Price ?? 0) * days;
 
-                // Check if booking already exists to avoid duplicate entries
+                // ✅ Prevent duplicate booking
                 var existingBooking = await _context.BookingOrder
-                    .FirstOrDefaultAsync(b => b.order_id == orderId);
+                    .FirstOrDefaultAsync(b => b.order_id == razorpay_order_id);
 
                 if (existingBooking != null)
                 {
-                    // Booking already exists, just show success page
-                    ViewBag.PaymentId = paymentId;
+                    ViewBag.PaymentId = razorpay_payment_id;
                     ViewBag.RoomName = room.Name;
                     ViewBag.Amount = totalAmount;
-                    ViewBag.Name = name;
-                    ViewBag.CheckIn = checkInDate.ToString("dd MMM yyyy");
-                    ViewBag.CheckOut = checkOutDate.ToString("dd MMM yyyy");
                     return View();
                 }
 
+                // ✅ Save booking
                 var booking = new Booking
                 {
                     user_id = currentUserId.Value,
@@ -267,8 +289,8 @@ namespace hrbs_project.Controllers
                     check_in = checkInDate,
                     check_out = checkOutDate,
                     status = "Paid",
-                    order_id = orderId,
-                    payment_id = paymentId,
+                    order_id = razorpay_order_id,
+                    payment_id = razorpay_payment_id,
                     user_name = name,
                     phone = phone,
                     room_name = room.Name,
@@ -280,16 +302,12 @@ namespace hrbs_project.Controllers
 
                 await _context.BookingOrder.AddAsync(booking);
 
-                // MAKE ROOM UNAVAILABLE AFTER BOOKING
-                //room.IsAvailable = false;
                 if (room.AvailableRooms > 0)
-                {
                     room.AvailableRooms -= 1;
-                }
 
                 await _context.SaveChangesAsync();
 
-                ViewBag.PaymentId = paymentId;
+                ViewBag.PaymentId = razorpay_payment_id;
                 ViewBag.RoomName = room.Name;
                 ViewBag.Amount = totalAmount;
                 ViewBag.Name = name;
@@ -301,7 +319,6 @@ namespace hrbs_project.Controllers
             }
             catch (Exception ex)
             {
-                // Log the exception here if you have logging
                 return Content($"ERROR: {ex.Message}");
             }
         }
