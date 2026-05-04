@@ -1,38 +1,49 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
-using System.Linq;
 using hrbs_project.Models;
+using System.Linq;
 
-public class FeaturesController : Controller
+public class FeatureController : Controller
 {
-    static List<Feature> features = new List<Feature>()
-    {
-        new Feature{ id=1, name="Kitchen"},
-        new Feature{ id=2, name="Balcony"},
-        new Feature{ id=3, name="Bedroom"}
-    };
+    private readonly ApplicationDbContext _context;
 
+    public FeatureController(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+
+    // LIST PAGE
     public IActionResult Index()
     {
-        return View(features);
+        var data = _context.Features.ToList();
+        return View(data);
     }
 
+    // ADD FEATURE (AJAX)
     [HttpPost]
-    public IActionResult AddFeature(string name)
+    public IActionResult AddFeature(Feature feature)
     {
-        int newId = features.Count + 1;
-        features.Add(new Feature { id = newId, name = name });
+        if (feature.name != null)
+        {
+            _context.Features.Add(feature);
+            _context.SaveChanges();
+            return Json(new { success = true });
+        }
 
-        return Json(true);
+        return Json(new { success = false });
     }
 
+    // DELETE FEATURE
     [HttpPost]
     public IActionResult DeleteFeature(int id)
     {
-        var item = features.FirstOrDefault(x => x.id == id);
-        if (item != null)
-            features.Remove(item);
+        var data = _context.Features.Find(id);
 
-        return Json(true);
+        if (data != null)
+        {
+            _context.Features.Remove(data);
+            _context.SaveChanges();
+        }
+
+        return RedirectToAction("Index");
     }
 }

@@ -22,6 +22,7 @@ namespace hrbs_project.Models
         public DbSet<Settings> Settings { get; set; }
         public DbSet<TeamDetails> TeamDetails { get; set; }
         public DbSet<UserQuery> UserQueries { get; set; }
+        public DbSet<TeamMember> TeamMembers { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

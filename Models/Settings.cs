@@ -23,14 +23,12 @@ namespace hrbs_project.Models
 
         public string Phone1 { get; set; } = string.Empty;
 
-        //public string Phone2 { get; set; } = string.Empty;
-
         public string Email { get; set; } = string.Empty;
 
         public string Facebook { get; set; } = string.Empty;
+        public string? Iframe { get; set; } = string.Empty;
 
-        //public string Instagram { get; set; } = string.Empty;
-
-        //public string Twitter { get; set; } = string.Empty;
+        [NotMapped]
+        public List<TeamMember> TeamMembers { get; set; } = new List<TeamMember>();
     }
 }

@@ -88,7 +88,7 @@ namespace hrbs_project.Controllers
         public IActionResult Index()
         {
             var rooms = _context.Rooms
-                .Where(r => r.IsAvailable == true)
+                .Where(r => r.AvailableRooms > 0)
                 .ToList();
 
             return View(rooms);
@@ -99,7 +99,7 @@ namespace hrbs_project.Controllers
         public IActionResult Rooms(string facilities, int? adults, int? children)
         {
             var rooms = _context.Rooms
-                .Where(r => r.IsAvailable == true)
+                .Where(r => r.AvailableRooms > 0)
                 .AsQueryable();
 
             if (!string.IsNullOrEmpty(facilities))
@@ -144,6 +144,15 @@ namespace hrbs_project.Controllers
                 rooms = rooms.Where(r => r.Children.HasValue && r.Children.Value >= children.Value);
 
             return View("Rooms", rooms.ToList());
+        }
+        public IActionResult RoomDetails(int id)
+        {
+            var room = _context.Rooms.FirstOrDefault(r => r.Id == id);
+
+            if (room == null)
+                return NotFound();
+
+            return View(room);
         }
 
         // ================= STATIC PAGES =================
@@ -272,7 +281,11 @@ namespace hrbs_project.Controllers
                 await _context.BookingOrder.AddAsync(booking);
 
                 // MAKE ROOM UNAVAILABLE AFTER BOOKING
-                room.IsAvailable = false;
+                //room.IsAvailable = false;
+                if (room.AvailableRooms > 0)
+                {
+                    room.AvailableRooms -= 1;
+                }
 
                 await _context.SaveChangesAsync();
 
@@ -329,7 +342,7 @@ namespace hrbs_project.Controllers
                     var room = _context.Rooms.FirstOrDefault(r => r.Id == booking.room_id);
                     if (room != null)
                     {
-                        room.IsAvailable = true;
+                        room.AvailableRooms += 1;
                     }
 
                     _context.SaveChanges();
@@ -370,23 +383,23 @@ namespace hrbs_project.Controllers
             return RedirectToAction("MyBookings");
         }
 
-        public IActionResult RoomDetails(int id)
-        {
-            var room = _context.Rooms.FirstOrDefault(r => r.Id == id);
+        //public IActionResult RoomDetails(int id)
+        //{
+        //    var room = _context.Rooms.FirstOrDefault(r => r.Id == id);
 
-            if (room == null)
-                return NotFound();
+        //    if (room == null)
+        //        return NotFound();
 
-            // Get booked dates for this room
-            var existingBookings = _context.BookingOrder
-                .Where(b => b.room_id == id && b.status == "Paid")
-                .Select(b => new { b.check_in, b.check_out })
-                .ToList();
+        //    // Get booked dates for this room
+        //    var existingBookings = _context.BookingOrder
+        //        .Where(b => b.room_id == id && b.status == "Paid")
+        //        .Select(b => new { b.check_in, b.check_out })
+        //        .ToList();
 
-            ViewBag.BookedDates = existingBookings;
+        //    ViewBag.BookedDates = existingBookings;
 
-            return View(room);
-        }
+        //    return View(room);
+        //}
 
         // ================= SEARCH AVAILABLE ROOMS =================
 

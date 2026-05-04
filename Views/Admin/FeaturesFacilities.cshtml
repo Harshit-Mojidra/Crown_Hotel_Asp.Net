@@ -1,171 +1,238 @@
-﻿@{
+﻿@model List<hrbs_project.Models.Feature>
+
+@{
     Layout = "~/Views/Shared/_AdminLayout.cshtml";
-    var features = ViewBag.Features;
-    var facilities = ViewBag.Facilities;
+    ViewData["Title"] = "Features & Facilities";
+
+    var facilities = ViewBag.Facilities as List<hrbs_project.Models.Facility>;
 }
 
-<div class="container mt-3">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
 
-    <h3 class="mb-4">FEATURES & FACILITIES</h3>
+<h2 class="mb-4">FEATURES & FACILITIES</h2>
+
+<div class="row">
 
     <!-- ================= FEATURES ================= -->
-    <div class="card p-3 mb-4 shadow-sm">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5>Features</h5>
-            <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addFeature">
-                + Add
-            </button>
-        </div>
+    <div class="col-md-5">
+        <div class="card p-3 shadow-sm">
 
-        <table class="table mt-3">
-            <thead class="table-light">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th style="width:120px;">Action</th>
-                </tr>
-            </thead>
+            <div class="d-flex justify-content-between mb-3">
+                <h4>Features</h4>
+                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#featureModal">
+                    + Add
+                </button>
+            </div>
 
-            <tbody>
-                @{
-                    int i = 1;
-                    if (features != null)
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (Model != null && Model.Any())
                     {
-                        foreach (var f in features)
+                        int i = 1;
+                        foreach (var item in Model)
                         {
                             <tr>
                                 <td>@i</td>
-                                <td>@f.Name</td>
+                                <td>@item.name</td>
                                 <td>
-                                    <a href="/Admin/DeleteFeature/@f.Id"
-                                       onclick="return confirm('Delete this feature?')"
-                                       class="btn btn-danger btn-sm">
+                                    <button class="btn btn-danger btn-sm"
+                                            onclick="deleteFeature(@item.id)">
                                         Delete
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
                             i++;
                         }
                     }
-                }
-            </tbody>
-        </table>
+                    else
+                    {
+                        <tr>
+                            <td colspan="3">No Features Found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
     </div>
 
     <!-- ================= FACILITIES ================= -->
-    <div class="card p-3 shadow-sm">
-        <div class="d-flex justify-content-between align-items-center">
-            <h5>Facilities</h5>
-            <button class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#addFacility">
-                + Add
-            </button>
-        </div>
+    <div class="col-md-7">
+        <div class="card p-3 shadow-sm">
 
-        <table class="table mt-3">
-            <thead class="table-light">
-                <tr>
-                    <th>#</th>
-                    <th>Icon</th>
-                    <th>Name</th>
-                    <th>Description</th>
-                    <th style="width:120px;">Action</th>
-                </tr>
-            </thead>
+            <div class="d-flex justify-content-between mb-3">
+                <h4>Facilities</h4>
+                <button class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#facilityModal">
+                    + Add
+                </button>
+            </div>
 
-            <tbody>
-                @{
-                    int j = 1;
-                    if (facilities != null)
+            <table class="table table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>#</th>
+                        <th>Icon</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @if (facilities != null && facilities.Any())
                     {
-                        foreach (var f in facilities)
+                        int i = 1;
+                        foreach (var item in facilities)
                         {
                             <tr>
-                                <td>@j</td>
+                                <td>@i</td>
                                 <td>
-                                    <img src="@f.Icon" width="40" height="40" style="object-fit:contain;" />
+                                    <img src="@item.IconPath" width="50" />
                                 </td>
-                                <td>@f.Name</td>
-                                <td>@f.Description</td>
+                                <td>@item.Name</td>
+                                <td>@item.Description</td>
                                 <td>
-                                    <a href="/Admin/DeleteFacility/@f.Id"
-                                       onclick="return confirm('Delete this facility?')"
-                                       class="btn btn-danger btn-sm">
+                                    <button class="btn btn-danger btn-sm"
+                                            onclick="deleteFacility(@item.Id)">
                                         Delete
-                                    </a>
+                                    </button>
                                 </td>
                             </tr>
-                            j++;
+                            i++;
                         }
                     }
-                }
-            </tbody>
-        </table>
+                    else
+                    {
+                        <tr>
+                            <td colspan="5">No Facilities Found</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
     </div>
 
 </div>
 
-
-<!-- ================= ADD FEATURE MODAL ================= -->
-<div class="modal fade" id="addFeature" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <form method="post" action="/Admin/AddFeature" class="modal-content">
+<!-- ================= FEATURE MODAL ================= -->
+<div class="modal fade" id="featureModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Add Feature</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5>Add Feature</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
-                <label class="form-label">Name</label>
-                <input type="text" name="name" class="form-control" required />
+                <input type="text" id="featureName" class="form-control" placeholder="Enter feature name" />
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
-                </button>
-                <button class="btn btn-success">
-                    Submit
-                </button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-success" onclick="addFeature()">Submit</button>
             </div>
 
-        </form>
+        </div>
     </div>
 </div>
 
-
-<!-- ================= ADD FACILITY MODAL ================= -->
-<div class="modal fade" id="addFacility" tabindex="-1">
-    <div class="modal-dialog modal-dialog-centered">
-        <form method="post" action="/Admin/AddFacility" class="modal-content">
+<!-- ================= FACILITY MODAL ================= -->
+<div class="modal fade" id="facilityModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
             <div class="modal-header">
-                <h5 class="modal-title">Add Facility</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                <h5>Add Facility</h5>
+                <button class="btn-close" data-bs-dismiss="modal"></button>
             </div>
 
             <div class="modal-body">
 
-                <label class="form-label">Icon (Image Path)</label>
-                <input type="text" name="icon" class="form-control mb-2" placeholder="/images/wifi.png" required />
+                <input type="text" id="facilityName" class="form-control mb-2" placeholder="Name" />
 
-                <label class="form-label">Name</label>
-                <input type="text" name="name" class="form-control mb-2" required />
+                <input type="file" id="facilityIcon" class="form-control mb-2" />
 
-                <label class="form-label">Description</label>
-                <textarea name="description" class="form-control" rows="3" required></textarea>
+                <textarea id="facilityDesc" class="form-control" placeholder="Description"></textarea>
 
             </div>
 
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                    Cancel
-                </button>
-                <button class="btn btn-success">
-                    Submit
-                </button>
+                <button class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button class="btn btn-success" onclick="addFacility()">Submit</button>
             </div>
 
-        </form>
+        </div>
     </div>
 </div>
+
+<!-- ================= SCRIPTS ================= -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+    // ADD FEATURE
+    function addFeature() {
+
+        var name = $("#featureName").val();
+
+        if (name == "") {
+            alert("Enter feature name");
+            return;
+        }
+
+        $.post('/Feature/AddFeature', { Name: name }, function () {
+            location.reload();
+        });
+    }
+
+    // DELETE FEATURE
+    function deleteFeature(id) {
+
+        if (confirm("Delete this feature?")) {
+            $.post('/Feature/DeleteFeature', { id: id }, function () {
+                location.reload();
+            });
+        }
+    }
+
+    // ADD FACILITY
+    function addFacility() {
+
+        var formData = new FormData();
+
+        formData.append("Name", $("#facilityName").val());
+        formData.append("Description", $("#facilityDesc").val());
+        formData.append("IconFile", $("#facilityIcon")[0].files[0]);
+
+        $.ajax({
+            url: '/Facility/AddFacility',
+            type: 'POST',
+            data: formData,
+            contentType: false,
+            processData: false,
+            success: function () {
+                location.reload();
+            }
+        });
+    }
+
+    // DELETE FACILITY
+    function deleteFacility(id) {
+
+        if (confirm("Delete this facility?")) {
+            $.post('/Facility/DeleteFacility', { id: id }, function () {
+                location.reload();
+            });
+        }
+    }
+</script>

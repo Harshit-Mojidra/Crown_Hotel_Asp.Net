@@ -1,0 +1,160 @@
+﻿@model hrbs_project.Models.Room
+
+@{
+    ViewBag.Title = "Room Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    .room-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 5px;
+    }
+
+    .breadcrumb {
+        font-size: 0.9rem;
+        color: #888;
+        margin-bottom: 20px;
+    }
+
+    .main-img {
+        width: 100%;
+        height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
+    }
+
+    .details-card {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+    }
+
+    .price {
+        font-size: 1.8rem;
+        font-weight: bold;
+    }
+
+    .badge-item {
+        display: inline-block;
+        background: #f0f0f0;
+        padding: 5px 12px;
+        margin: 3px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+    }
+
+    .section-title {
+        font-weight: 700;
+        margin-top: 15px;
+        margin-bottom: 8px;
+    }
+
+    .review-box {
+        margin-top: 20px;
+        padding: 15px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .review-user {
+        font-weight: bold;
+    }
+
+    .book-btn {
+        width: 100%;
+        background: #2bb673;
+        color: white;
+        padding: 10px;
+        border-radius: 8px;
+        border: none;
+        font-weight: 600;
+    }
+</style>
+
+<div class="container mt-4">
+
+    <!-- TITLE -->
+    <h2 class="room-title">@Model.Name</h2>
+    <div class="breadcrumb">HOME > ROOMS</div>
+
+    <div class="row">
+
+        <!-- LEFT IMAGE -->
+        <div class="col-md-8">
+            <img src="/images/rooms/@Model.Image" class="main-img" />
+        </div>
+
+        <!-- RIGHT DETAILS -->
+        <div class="col-md-4">
+            <div class="details-card">
+
+                <div class="price">₹@Model.Price per night</div>
+
+                ⭐⭐⭐⭐⭐
+
+                <!-- FEATURES -->
+                <div class="section-title">Features</div>
+                @foreach (var f in (Model.Features ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    <span class="badge-item">@f</span>
+                }
+
+                <!-- FACILITIES -->
+                <div class="section-title">Facilities</div>
+                @foreach (var f in (Model.Facilities ?? "").Split(',', StringSplitOptions.RemoveEmptyEntries))
+                {
+                    <span class="badge-item">@f</span>
+                }
+
+                <!-- GUESTS -->
+                <div class="section-title">Guests</div>
+                <p>@Model.Adult Adults, @Model.Children Children</p>
+
+                <!-- AREA -->
+                <div class="section-title">Area</div>
+                <p>1800 sq. ft.</p>
+
+                <!-- BOOK BUTTON -->
+                <a href="/Home/ConfirmBooking?id=@Model.Id&checkin=@DateTime.Now.ToString("yyyy-MM-dd")&checkout=@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")"
+                   class="book-btn text-center d-block mt-3">
+                    Book Now
+                </a>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- DESCRIPTION -->
+    <div class="mt-4">
+        <h4>Description</h4>
+        <p>
+            Top-tier luxury suite built for VIP guests with full comfort and privacy.
+        </p>
+    </div>
+
+    <!-- REVIEWS -->
+    <div class="mt-4">
+        <h4>Review & Rating</h4>
+
+        <div class="review-box">
+            <div class="review-user">👤 User</div>
+            <p>Excellent stay! Everything was perfect.</p>
+            ⭐⭐⭐⭐⭐
+        </div>
+
+        <div class="review-box">
+            <div class="review-user">👤 User</div>
+            <p>Very comfortable and clean room.</p>
+            ⭐⭐⭐⭐⭐
+        </div>
+
+        <div class="review-box">
+            <div class="review-user">👤 User</div>
+            <p>Highly recommended!</p>
+            ⭐⭐⭐⭐⭐
+        </div>
+    </div>
+
+</div>

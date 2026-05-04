@@ -7,31 +7,312 @@
 
 <style>
     body {
-        overflow-x: hidden;
+        background-color: #f5f5f5;
+        font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
     }
 
-    .room-img {
-        height: 250px;
+    .section-title {
+        text-align: center;
+        font-weight: 700;
+        font-size: 2rem;
+        margin-bottom: 30px;
+        color: #1a1a2e;
+    }
+
+    /* Full width container - removes white space */
+    .container-full {
         width: 100%;
+        max-width: 100%;
+        padding: 0 20px;
+        margin: 0 auto;
+    }
+
+    /* FILTER BOX */
+    .filter-box {
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        border: 1px solid #e8e8e8;
+    }
+
+        .filter-box h5 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+            margin-bottom: 15px;
+            color: #1a1a2e;
+        }
+
+        .filter-box h6 {
+            font-weight: 700;
+            font-size: 0.8rem;
+            margin-top: 18px;
+            margin-bottom: 10px;
+            color: #555;
+            letter-spacing: 0.5px;
+        }
+
+        .filter-box input[type="date"],
+        .filter-box input[type="number"] {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 8px 12px;
+            font-size: 0.85rem;
+        }
+
+        .filter-box input[type="checkbox"] {
+            margin-right: 8px;
+            cursor: pointer;
+        }
+
+        .filter-box div {
+            margin-bottom: 8px;
+            font-size: 0.85rem;
+            color: #444;
+        }
+
+    /* ROOM CARD - Design from second image */
+    .room-card {
+        background: #fff;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        overflow: hidden;
+        transition: transform 0.2s, box-shadow 0.2s;
+        margin-bottom: 30px;
+        border: 1px solid #eee;
+    }
+
+        .room-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+
+    .room-img {
+        height: 100%;
+        width: 100%;
+        min-height: 280px;
         object-fit: cover;
+    }
+
+    .room-content {
+        padding: 24px;
+    }
+
+    .room-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+    }
+
+    .room-name {
+        font-size: 1.6rem;
+        font-weight: 700;
+        color: #1a1a2e;
+        margin: 0;
+        letter-spacing: -0.3px;
+    }
+
+    .price-section {
+        text-align: right;
+    }
+
+    .price-amount {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: #1a1a2e;
+        line-height: 1;
+    }
+
+    .price-currency {
+        font-size: 1rem;
+        font-weight: 600;
+        color: #666;
+    }
+
+    .price-night {
+        font-size: 0.8rem;
+        color: #888;
+        margin-top: 2px;
+    }
+
+    /* Section styles */
+    .info-section {
+        margin-bottom: 16px;
+    }
+
+    .section-label {
+        font-size: 0.7rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: #999;
+        margin-bottom: 8px;
+    }
+
+    .info-items {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .info-badge {
+        background-color: #f0f0f0;
+        color: #333;
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 4px 12px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    .guest-item {
+        background-color: #f0f0f0;
+        color: #333;
+        font-size: 0.75rem;
+        font-weight: 500;
+        padding: 4px 12px;
+        border-radius: 20px;
+        display: inline-block;
+    }
+
+    /* Buttons */
+    .btn-book {
+        background: #2bb673;
+        border: none;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-weight: 600;
+        font-size: 0.9rem;
+        color: white;
+        transition: all 0.2s;
+        margin-right: 12px;
+    }
+
+        .btn-book:hover {
+            background: #249e62;
+            transform: scale(0.98);
+        }
+
+    .btn-details {
+        background: transparent;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        padding: 10px 24px;
+        font-weight: 500;
+        font-size: 0.85rem;
+        color: #555;
+        transition: all 0.2s;
+    }
+
+        .btn-details:hover {
+            background: #f5f5f5;
+            border-color: #aaa;
+        }
+
+    /* Sidebar padding */
+    .filter-sidebar {
+        padding-right: 15px;
+    }
+
+    .rooms-list-side {
+        padding-left: 15px;
+    }
+
+    /* No rooms message */
+    .no-rooms {
+        background: #fff;
+        border-radius: 16px;
+        padding: 40px;
+        text-align: center;
+        border: 1px solid #eee;
+    }
+
+        .no-rooms h5 {
+            color: #888;
+            font-weight: 500;
+        }
+
+    /* Responsive */
+    @@media (max-width: 992px) {
+        .container-full {
+            padding: 0 15px;
+        }
+
+        .filter-sidebar {
+            padding-right: 0;
+        }
+
+        .rooms-list-side {
+            padding-left: 0;
+        }
+
+        .room-name {
+            font-size: 1.3rem;
+        }
+
+        .price-amount {
+            font-size: 1.5rem;
+        }
+
+        .room-header {
+            flex-direction: column;
+        }
+
+        .price-section {
+            text-align: left;
+            margin-top: 10px;
+        }
+    }
+
+    @@media (max-width: 768px) {
+        .room-content {
+            padding: 18px;
+        }
+
+        .room-img {
+            min-height: 220px;
+        }
+
+        .btn-book, .btn-details {
+            padding: 8px 18px;
+            font-size: 0.8rem;
+        }
+    }
+
+    @@media (max-width: 576px) {
+        .btn-book, .btn-details {
+            width: 100%;
+            margin-right: 0;
+            margin-bottom: 10px;
+        }
+
+        .btn-details {
+            margin-left: 0;
+        }
+
+        .room-buttons {
+            display: flex;
+            flex-direction: column;
+        }
     }
 </style>
 
-<div class="container mt-5">
-    <h2 class="text-center mb-4">OUR ROOMS</h2>
+<div class="container-full mt-4">
+    <h2 class="section-title">OUR ROOMS</h2>
 
     <div class="row">
-
-        <!-- ================= LEFT FILTER ================= -->
-        <div class="col-md-3">
+        <!-- ================= FILTER SIDEBAR ================= -->
+        <div class="col-lg-3 col-md-4 mb-4 filter-sidebar">
             <form method="get" asp-action="Rooms" asp-controller="Home">
-                
-                <div class="card p-3 shadow-sm">
+                <div class="filter-box">
                     <h5>Filters</h5>
 
-                    <!-- CHECK-IN / CHECK-OUT -->
-                    <h6 class="mt-3">Check Availability</h6>
-
+                    <!-- CHECK AVAILABILITY -->
+                    <h6>CHECK AVAILABILITY</h6>
                     <input type="date" name="checkin"
                            value="@Context.Request.Query["checkin"]"
                            class="form-control mb-2"
@@ -43,101 +324,124 @@
                            onchange="this.form.submit();" />
 
                     <!-- FACILITIES -->
-                    <h6>Facilities</h6>
-
+                    <h6>FACILITIES</h6>
                     @{
                         var selectedFacilities = Context.Request.Query["facilities"];
                     }
 
-                    <div>
-                        <input type="checkbox" name="facilities" value="wifi"
-                               onchange="this.form.submit();"
-                               @(selectedFacilities.Contains("wifi") ? "checked" : "") /> Wifi
-                    </div>
-
-                    <div>
-                        <input type="checkbox" name="facilities" value="ac"
-                               onchange="this.form.submit();"
-                               @(selectedFacilities.Contains("ac") ? "checked" : "") /> AC
-                    </div>
-
-                    <div>
-                        <input type="checkbox" name="facilities" value="tv"
-                               onchange="this.form.submit();"
-                               @(selectedFacilities.Contains("tv") ? "checked" : "") /> TV
-                    </div>
-
-                    <div>
-                        <input type="checkbox" name="facilities" value="geyser"
-                               onchange="this.form.submit();"
-                               @(selectedFacilities.Contains("geyser") ? "checked" : "") /> Geyser
-                    </div>
-
-                    <div>
-                        <input type="checkbox" name="facilities" value="spa"
-                               onchange="this.form.submit();"
-                               @(selectedFacilities.Contains("spa") ? "checked" : "") /> Spa
-                    </div>
+                    <div><input type="checkbox" name="facilities" value="wifi" onchange="this.form.submit();" @(selectedFacilities.Contains("wifi") ? "checked" : "") /> WiFi</div>
+                    <div><input type="checkbox" name="facilities" value="ac" onchange="this.form.submit();" @(selectedFacilities.Contains("ac") ? "checked" : "") /> Air Conditioner</div>
+                    <div><input type="checkbox" name="facilities" value="tv" onchange="this.form.submit();" @(selectedFacilities.Contains("tv") ? "checked" : "") /> Television</div>
+                    <div><input type="checkbox" name="facilities" value="geyser" onchange="this.form.submit();" @(selectedFacilities.Contains("geyser") ? "checked" : "") /> Geyser</div>
+                    <div><input type="checkbox" name="facilities" value="spa" onchange="this.form.submit();" @(selectedFacilities.Contains("spa") ? "checked" : "") /> Spa</div>
 
                     <!-- GUESTS -->
-                    <h6 class="mt-3">Guests</h6>
-
+                    <h6>GUESTS</h6>
                     <input type="number" name="adults"
                            value="@Context.Request.Query["adults"]"
                            class="form-control mb-2"
                            placeholder="Adults"
+                           min="0"
                            onchange="this.form.submit();" />
 
                     <input type="number" name="children"
                            value="@Context.Request.Query["children"]"
                            class="form-control"
                            placeholder="Children"
+                           min="0"
                            onchange="this.form.submit();" />
                 </div>
-
             </form>
         </div>
 
-        <!-- ================= RIGHT ROOMS LIST ================= -->
-        <div class="col-md-9">
-
+        <!-- ================= ROOMS LIST ================= -->
+        <div class="col-lg-9 col-md-8 rooms-list-side">
             @if (Model.Count == 0)
             {
-                <div class="alert alert-danger">
-                    No rooms found based on filter
+                <div class="no-rooms">
+                    <h5>No rooms available for the selected filters.</h5>
                 </div>
             }
 
             @foreach (var item in Model)
             {
-                <div class="card mb-4 shadow-sm">
+                <div class="room-card">
                     <div class="row g-0">
-
-                        <!-- IMAGE -->
+                        <!-- IMAGE COLUMN -->
                         <div class="col-md-5">
-                            <img src="/images/rooms/@item.Image"
-                                 class="room-img rounded-start" />
+                            <img src="/images/rooms/@item.Image" class="room-img" alt="@item.Name" />
                         </div>
 
-                        <!-- DETAILS -->
+                        <!-- DETAILS COLUMN -->
                         <div class="col-md-7">
-                            <div class="card-body">
-
-                                <div class="d-flex justify-content-between">
-                                    <h5>@item.Name</h5>
-                                    <h6>₹@item.Price per night</h6>
+                            <div class="room-content">
+                                <!-- Room Name & Price -->
+                                <div class="room-header">
+                                    <h3 class="room-name">@item.Name</h3>
+                                    <div class="price-section">
+                                        <span class="price-amount">
+                                            <span class="price-currency">₹</span>@item.Price
+                                        </span>
+                                        <div class="price-night">/ night</div>
+                                    </div>
                                 </div>
 
-                                <p><strong>Features:</strong> @item.Features</p>
-                                <p><strong>Facilities:</strong> @item.Facilities</p>
-                                <p><strong>Guests:</strong> @item.Adult Adults, @item.Children Children</p>
+                                <!-- FEATURES Section -->
+                                <div class="info-section">
+                                    <div class="section-label">FEATURES</div>
+                                    <div class="info-items">
+                                        @{
+                                            var features = (item.Features ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                            if (features.Any())
+                                            {
+                                                foreach (var f in features)
+                                                {
+                                                    <span class="info-badge">@f.Trim()</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="info-badge">No features</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
 
-                                <div class="mt-3">
+                                <!-- FACILITIES Section -->
+                                <div class="info-section">
+                                    <div class="section-label">FACILITIES</div>
+                                    <div class="info-items">
+                                        @{
+                                            var facilities = (item.Facilities ?? "").Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries);
+                                            if (facilities.Any())
+                                            {
+                                                foreach (var fac in facilities)
+                                                {
+                                                    <span class="info-badge">@fac.Trim()</span>
+                                                }
+                                            }
+                                            else
+                                            {
+                                                <span class="info-badge">No facilities</span>
+                                            }
+                                        }
+                                    </div>
+                                </div>
 
-                                    <!-- ✅ LOGIN CHECK FIX -->
+                                <!-- GUESTS Section -->
+                                <div class="info-section">
+                                    <div class="section-label">GUESTS</div>
+                                    <div class="info-items">
+                                        <span class="guest-item">@item.Adult Adults</span>
+                                        <span class="guest-item">@item.Children Children</span>
+                                    </div>
+                                </div>
+
+                                <!-- BUTTONS -->
+                                <div class="room-buttons mt-3">
                                     @if (Context.Session.GetInt32("UserId") == null)
                                     {
-                                        <button class="btn btn-success"
+                                        <button class="btn btn-book"
                                                 onclick="setReturnUrl('/Home/ConfirmBooking?id=@item.Id&checkin=@DateTime.Now.ToString("yyyy-MM-dd")&checkout=@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")')"
                                                 data-bs-toggle="modal"
                                                 data-bs-target="#loginModal">
@@ -147,31 +451,28 @@
                                     else
                                     {
                                         <a href="/Home/ConfirmBooking?id=@item.Id&checkin=@DateTime.Now.ToString("yyyy-MM-dd")&checkout=@DateTime.Now.AddDays(1).ToString("yyyy-MM-dd")"
-                                           class="btn btn-success">
+                                           class="btn btn-book">
                                             Book Now
                                         </a>
                                     }
-
-                                    <button class="btn btn-outline-secondary">
+                                    <a asp-controller="Home"
+                                       asp-action="RoomDetails"
+                                       asp-route-id="@item.Id"
+                                       class="btn btn-details">
                                         More details
-                                    </button>
-
+                                    </a>
                                 </div>
-
                             </div>
                         </div>
-
                     </div>
                 </div>
             }
         </div>
-
     </div>
 </div>
 
-<!-- ✅ SCRIPT FOR RETURN URL -->
 <script>
     function setReturnUrl(url) {
-        fetch('/Home/SetReturnUrl?url=' + url);
+        fetch('/Home/SetReturnUrl?url=' + encodeURIComponent(url));
     }
 </script>

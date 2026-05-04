@@ -24,5 +24,8 @@ namespace hrbs_project.Models
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
         public string? Status { get; set; }
+
+        public string? ResetToken { get; set; }
+        public DateTime? TokenExpiry { get; set; }
     }
 }
