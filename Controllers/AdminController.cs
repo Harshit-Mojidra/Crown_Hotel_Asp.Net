@@ -5,6 +5,7 @@ using hrbs_project.Models;
 using System;
 using System.IO;
 
+// CONTROLLER FOR ADMIN DASHBOARD
 namespace hrbs_project.Controllers
 {
     public class AdminController : Controller
