@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Http;
 using System.Linq;
 using hrbs_project.Models;
+using System;
+using System.IO;
 
 namespace hrbs_project.Controllers
 {
@@ -14,7 +16,7 @@ namespace hrbs_project.Controllers
             _context = context;
         }
 
-        // ================= SESSION HELPER =================
+        // ================= SESSION =================
         private bool IsAdminLoggedIn()
         {
             return HttpContext.Session.GetString("Admin") != null;
@@ -52,90 +54,71 @@ namespace hrbs_project.Controllers
             if (!IsAdminLoggedIn())
                 return RedirectToAction("Login");
 
-            // USER COUNTS
-            ViewBag.NewUsers = _context.Users.Count();
+            var bookings = _context.BookingOrder.ToList();
+
+            // COUNTS
+            ViewBag.TotalBookings = bookings.Count;
+            ViewBag.PaidBookings = bookings.Count(b => b.status == "Paid");
+            ViewBag.CancelledBookings = bookings.Count(b => b.status == "Cancelled");
+
+            // AMOUNTS
+            ViewBag.TotalAmount = bookings.Sum(b => (decimal?)b.paid_amount) ?? 0;
+            ViewBag.PaidAmount = bookings
+                .Where(b => b.status == "Paid")
+                .Sum(b => (decimal?)b.paid_amount) ?? 0;
+
+            ViewBag.CancelledAmount = bookings
+                .Where(b => b.status == "Cancelled")
+                .Sum(b => (decimal?)b.paid_amount) ?? 0;
+
+            // USERS
+            ViewBag.TotalUsers = _context.Users.Count();
             ViewBag.ActiveUsers = _context.Users.Count(u => u.Status == "active");
             ViewBag.InactiveUsers = _context.Users.Count(u => u.Status == "inactive");
-
-            // BOOKING COUNTS
-            ViewBag.TotalBookings = _context.BookingOrder.Count();
-            ViewBag.PendingBookings = _context.BookingOrder.Count(b => b.status == "pending");
-            ViewBag.ConfirmedBookings = _context.BookingOrder.Count(b => b.status == "confirmed");
-            ViewBag.CancelledBookings = _context.BookingOrder.Count(b => b.status == "cancelled");
+            ViewBag.UnverifiedUsers = _context.Users.Count(u => u.Status == "unverified");
 
             return View();
         }
 
         // ================= BOOKINGS =================
-        [HttpGet]
-        public IActionResult NewBookings()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult RefundBookings()
-        {
-            return View();
-        }
-
-        [HttpGet]
-        public IActionResult FeaturesFacilities()
-        {
-            return View();
-        }
-        // NEW BOOKINGS (Pending)
+        // SHOW ALL PAID BOOKINGS
         public IActionResult NewBooking()
         {
-            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
-
-            var newBookings = _context.BookingOrder
-                .Where(b => b.status == "pending")
-                .ToList();
-
-            return View(newBookings);
-        }
-
-        // BOOKING RECORDS (Confirmed + Cancelled)
-        public IActionResult BookingRecords()
-        {
-            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            if (!IsAdminLoggedIn())
+                return RedirectToAction("Login");
 
             var bookings = _context.BookingOrder
-                .Where(b => b.status == "confirmed" || b.status == "cancelled")
+                .Where(b => b.status == "Paid")
+                .OrderByDescending(b => b.booking_date)
                 .ToList();
 
             return View(bookings);
         }
 
-        // REFUND PAGE (Cancelled)
-        public IActionResult RefundBooking()
+        // ALL BOOKINGS (PAID + CANCELLED)
+        public IActionResult BookingRecords()
         {
-            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            if (!IsAdminLoggedIn())
+                return RedirectToAction("Login");
 
-            var refunds = _context.BookingOrder
-                .Where(b => b.status == "cancelled")
+            var bookings = _context.BookingOrder
+                .OrderByDescending(b => b.booking_date)
                 .ToList();
 
-            return View(refunds);
+            return View(bookings);
         }
 
-        // ================= ACTIONS =================
-
-        // CONFIRM BOOKING
-        [HttpPost]
-        public IActionResult ConfirmBooking(int id)
+        // CANCELLED BOOKINGS
+        public IActionResult RefundBooking()
         {
-            var booking = _context.BookingOrder
-                .FirstOrDefault(b => b.user_id == id);
+            if (!IsAdminLoggedIn())
+                return RedirectToAction("Login");
 
-            if (booking != null)
-            {
-                booking.status = "confirmed";
-                _context.SaveChanges();
-            }
+            var bookings = _context.BookingOrder
+                .Where(b => b.status == "Cancelled")
+                .ToList();
 
-            return RedirectToAction("BookingRecords");
+            return View(bookings);
         }
 
         // CANCEL BOOKING
@@ -143,11 +126,19 @@ namespace hrbs_project.Controllers
         public IActionResult CancelBooking(int id)
         {
             var booking = _context.BookingOrder
-                .FirstOrDefault(b => b.user_id == id);
+                .FirstOrDefault(b => b.Id == id);
 
             if (booking != null)
             {
-                booking.status = "cancelled";
+                booking.status = "Cancelled";
+
+                // Increase room availability
+                var room = _context.Rooms.FirstOrDefault(r => r.Id == booking.room_id);
+                if (room != null)
+                {
+                    room.AvailableRooms += 1;
+                }
+
                 _context.SaveChanges();
             }
 
@@ -157,7 +148,8 @@ namespace hrbs_project.Controllers
         // ================= ROOMS =================
         public IActionResult Rooms()
         {
-            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            if (!IsAdminLoggedIn())
+                return RedirectToAction("Login");
 
             var rooms = _context.Rooms.ToList();
             return View(rooms);
@@ -170,12 +162,12 @@ namespace hrbs_project.Controllers
             if (room == null)
                 return NotFound();
 
-            var existingBookings = _context.BookingOrder
-                .Where(b => b.room_id == id && b.status == "confirmed")
+            var bookings = _context.BookingOrder
+                .Where(b => b.room_id == id && b.status == "Paid")
                 .Select(b => new { b.check_in, b.check_out })
                 .ToList();
 
-            ViewBag.BookedDates = existingBookings;
+            ViewBag.BookedDates = bookings;
 
             return View(room);
         }
@@ -183,7 +175,8 @@ namespace hrbs_project.Controllers
         // ================= SETTINGS =================
         public IActionResult Settings()
         {
-            if (!IsAdminLoggedIn()) return RedirectToAction("Login");
+            if (!IsAdminLoggedIn())
+                return RedirectToAction("Login");
 
             var settings = _context.Settings.FirstOrDefault();
 
@@ -199,6 +192,7 @@ namespace hrbs_project.Controllers
 
             return View(settings);
         }
+
         [HttpPost]
         public IActionResult UpdateGeneralSettings(Settings model)
         {
@@ -208,7 +202,6 @@ namespace hrbs_project.Controllers
             {
                 data.SiteTitle = model.SiteTitle;
                 data.About = model.About;
-
                 _context.SaveChanges();
             }
 
@@ -233,13 +226,15 @@ namespace hrbs_project.Controllers
 
             return RedirectToAction("Settings");
         }
+
+        // ================= TEAM =================
         [HttpPost]
         public IActionResult AddTeamMember(string Name, IFormFile ImageFile)
         {
             if (ImageFile != null)
             {
                 string fileName = Guid.NewGuid().ToString() + Path.GetExtension(ImageFile.FileName);
-                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/", fileName);
+                string path = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot/images/team/", fileName);
 
                 using (var stream = new FileStream(path, FileMode.Create))
                 {
@@ -258,6 +253,7 @@ namespace hrbs_project.Controllers
 
             return RedirectToAction("Settings");
         }
+
         [HttpPost]
         public IActionResult DeleteTeamMember(int id)
         {
@@ -270,14 +266,6 @@ namespace hrbs_project.Controllers
             }
 
             return RedirectToAction("Settings");
-        }
-        public IActionResult EditSettings()
-        {
-            return View();
-        }
-        public IActionResult AddTeamMember()
-        {
-            return View();
         }
 
         // ================= USERS =================

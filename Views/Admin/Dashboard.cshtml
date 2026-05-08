@@ -7,34 +7,37 @@
 
     <h2 class="mb-4">DASHBOARD</h2>
 
+    <!-- AUTO REFRESH -->
+    <meta http-equiv="refresh" content="5">
+
     <!-- TOP CARDS -->
     <div class="row text-center mb-4">
 
         <div class="col-md-3">
-            <div class="card p-3">
-                <h6 class="text-success">New Bookings</h6>
-                <h2>@(ViewBag.NewBookings ?? 0)</h2>
+            <div class="card p-3 shadow">
+                <h6 class="text-success">New Bookings (Paid)</h6>
+                <h2>@(ViewBag.PaidBookings ?? 0)</h2>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card p-3">
-                <h6 class="text-warning">Refund Bookings</h6>
-                <h2>@(ViewBag.RefundBookings ?? 0)</h2>
+            <div class="card p-3 shadow">
+                <h6 class="text-danger">Cancelled Bookings</h6>
+                <h2>@(ViewBag.CancelledBookings ?? 0)</h2>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card p-3">
-                <h6 class="text-info">User Queries</h6>
-                <h2>@(ViewBag.Queries ?? 0)</h2>
+            <div class="card p-3 shadow">
+                <h6 class="text-primary">Total Users</h6>
+                <h2>@(ViewBag.TotalUsers ?? 0)</h2>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card p-3">
-                <h6 class="text-primary">Rating & Review</h6>
-                <h2>@(ViewBag.Reviews ?? 0)</h2>
+            <div class="card p-3 shadow">
+                <h6 class="text-info">Active Users</h6>
+                <h2>@(ViewBag.ActiveUsers ?? 0)</h2>
             </div>
         </div>
 
@@ -46,7 +49,7 @@
     <div class="row text-center mb-4">
 
         <div class="col-md-4">
-            <div class="card p-3">
+            <div class="card p-3 shadow">
                 <h6 class="text-primary">Total Bookings</h6>
                 <h2>@(ViewBag.TotalBookings ?? 0)</h2>
                 <p>₹@(ViewBag.TotalAmount ?? 0)</p>
@@ -54,46 +57,18 @@
         </div>
 
         <div class="col-md-4">
-            <div class="card p-3">
-                <h6 class="text-success">Active Bookings</h6>
-                <h2>@(ViewBag.ActiveBookings ?? 0)</h2>
-                <p>₹@(ViewBag.ActiveAmount ?? 0)</p>
+            <div class="card p-3 shadow">
+                <h6 class="text-success">Active (Paid)</h6>
+                <h2>@(ViewBag.PaidBookings ?? 0)</h2>
+                <p>₹@(ViewBag.PaidAmount ?? 0)</p>
             </div>
         </div>
 
         <div class="col-md-4">
-            <div class="card p-3">
-                <h6 class="text-danger">Cancelled Bookings</h6>
+            <div class="card p-3 shadow">
+                <h6 class="text-danger">Cancelled</h6>
                 <h2>@(ViewBag.CancelledBookings ?? 0)</h2>
                 <p>₹@(ViewBag.CancelledAmount ?? 0)</p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- USERS / QUERIES / REVIEWS -->
-    <h4 class="mb-3">Users, Queries, Reviews Analytics</h4>
-
-    <div class="row text-center mb-4">
-
-        <div class="col-md-4">
-            <div class="card p-3">
-                <h6 class="text-success">New Registration</h6>
-                <h2>@(ViewBag.NewUsers ?? 0)</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card p-3">
-                <h6 class="text-info">Queries</h6>
-                <h2>@(ViewBag.TotalQueries ?? 0)</h2>
-            </div>
-        </div>
-
-        <div class="col-md-4">
-            <div class="card p-3">
-                <h6 class="text-primary">Reviews</h6>
-                <h2>@(ViewBag.TotalReviews ?? 0)</h2>
             </div>
         </div>
 
@@ -105,28 +80,28 @@
     <div class="row text-center">
 
         <div class="col-md-3">
-            <div class="card p-3">
-                <h6 class="text-info">Total</h6>
+            <div class="card p-3 shadow">
+                <h6>Total</h6>
                 <h2>@(ViewBag.TotalUsers ?? 0)</h2>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card p-3">
+            <div class="card p-3 shadow">
                 <h6 class="text-success">Active</h6>
                 <h2>@(ViewBag.ActiveUsers ?? 0)</h2>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card p-3">
+            <div class="card p-3 shadow">
                 <h6 class="text-warning">Inactive</h6>
                 <h2>@(ViewBag.InactiveUsers ?? 0)</h2>
             </div>
         </div>
 
         <div class="col-md-3">
-            <div class="card p-3">
+            <div class="card p-3 shadow">
                 <h6 class="text-danger">Unverified</h6>
                 <h2>@(ViewBag.UnverifiedUsers ?? 0)</h2>
             </div>
